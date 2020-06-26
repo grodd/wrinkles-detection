@@ -10,3 +10,6 @@
 /ModuleList.patch
 /ReLU.patch
 /Sequential.patch
+
+#zip files
+/models.zip

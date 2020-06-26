@@ -1,7 +1,6 @@
 from flask import Flask, request, render_template, send_file
-from fastai import *
-from fastai.vision import *
-from fastai.callbacks.hooks import *
+# from fastai import *
+# from fastai.callbacks.hooks import *
 import os
 from cv2 import cv2 
 import numpy as np
@@ -14,7 +13,7 @@ from werkzeug.utils import secure_filename
 
 
 warnings.filterwarnings("ignore")
-torch.nn.Module.dump_patches = True
+# torch.nn.Module.dump_patches = True
 
 def getI420FromBase64(codec, image_path="./uploads/"):
     base64_data = re.sub('^data:image/.+;base64,', '', codec)
@@ -35,10 +34,6 @@ app = Flask(__name__)
 uploads_dir = os.path.join(app.instance_path, 'uploads')
 os.makedirs(uploads_dir, exist_ok=True)
 
-learn = load_learner('./model_1/')
-learn_2 = load_learner('./model_2/')
-learn_3 = load_learner('./model_3/')
-
 @app.route("/", methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
@@ -49,8 +44,13 @@ def home():
 
 
 def output(data):
+  # from fastai.vision import load_learner, open_image
+  import fastai.vision as f
+  learn = f.load_learner('./model_1/')
+  learn_2 = f.load_learner('./model_2/')
+  learn_3 = f.load_learner('./model_3/')
   name = getI420FromBase64(data)
-  img = open_image('./uploads/' + name + '.png')
+  img = f.open_image('./uploads/' + name + '.png')
   pred_1 = learn.predict(img)[1]
   mask_1 = pred_1.numpy()[0]
   pred_2 = learn_2.predict(img)[1]
@@ -75,4 +75,4 @@ def output(data):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+  app.run(debug=True)
