@@ -49,22 +49,23 @@ def output(data):
   mask_dark_circles[mask_dark_circles==3] = 2
   contours = find_boundaries(mask_dark_circles, connectivity=1, mode='thick', background=(2))
   img_cv[contours == True]= 255
-  img_cv[mask_1==3]= 150
+  img_cv[mask_1==3]= (255,0,0)
   img_cv[mask_1 == 4] = 150
-  img_cv[mask_2 == 5] = 0
+  img_cv[mask_2 == 5] = (112,72,242)
   img_cv[mask_3== 6] = 255
   t = time.time()
-  cv2.imwrite('./output/' + str(t) + '.png', img_cv)
+  cv2.imwrite('./output/' + str(t) + '.png', img_cv, [int(cv2.IMWRITE_PNG_COMPRESSION), 9])
   filename = './output/'+str(t)+'.png'
   with open(filename, "rb") as img_file:
     my_string = base64.b64encode(img_file.read()).decode('ascii')
-  # return send_file(filename, mimetype='image/gif')
-  return {"name": (my_string)}
+  #return send_file(filename, attachment_filename="output.png")
+  return {"image": (my_string)}
 
 
 if __name__ == "__main__":
     from gevent.pywsgi import WSGIServer
     http_server = WSGIServer(('',5000), app)
     http_server.serve_forever()
+
                                                                                                                                                                                          87,26         Bot
 
